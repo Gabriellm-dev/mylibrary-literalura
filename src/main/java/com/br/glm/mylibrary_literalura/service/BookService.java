@@ -1,5 +1,6 @@
 package com.br.glm.mylibrary_literalura.service;
 
+import com.br.glm.mylibrary_literalura.models.Book;
 import com.br.glm.mylibrary_literalura.models.BookResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -44,5 +46,11 @@ public class BookService {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Error fetching data from API: " + e.getMessage(), e);
         }
+    }
+
+    public void printBooks(List<Book> books) {
+        books.forEach(book -> {
+            System.out.println(book.toString());
+        });
     }
 }
