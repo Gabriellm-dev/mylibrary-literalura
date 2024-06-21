@@ -1,8 +1,9 @@
 package com.br.glm.mylibrary_literalura.service;
 
-import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.br.glm.mylibrary_literalura.models.BookResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -26,7 +27,7 @@ public class BookService {
                 .build();
     }
 
-    public JsonNode getBooks(String query) {
+    public BookResponse getBooks(String query) {
         HttpRequest request = buildRequest(query);
 
         try {
@@ -36,7 +37,7 @@ public class BookService {
 
             if (response.statusCode() == 200) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                return objectMapper.readTree(response.body());
+                return objectMapper.readValue(response.body(), BookResponse.class);
             } else {
                 throw new RuntimeException("Failed to fetch data. HTTP Status Code: " + response.statusCode());
             }
