@@ -11,9 +11,14 @@ import lombok.Setter;
 public class Author {
 
     private String name;
+    private Integer birthYear;
+    private Integer deathYear;
 
     @Override
     public String toString() {
-        return name;
+        return
+                name + '\'' +
+                birthYear +
+                deathYear;
     }
 }

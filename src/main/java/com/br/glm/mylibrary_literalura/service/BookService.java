@@ -1,6 +1,7 @@
 package com.br.glm.mylibrary_literalura.service;
 
 
+import com.br.glm.mylibrary_literalura.models.Author;
 import com.br.glm.mylibrary_literalura.models.Book;
 import com.br.glm.mylibrary_literalura.models.BookResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +60,8 @@ public class BookService {
         Book book = new Book();
         book.setId(result.getId());
         book.setTitle(result.getTitle());
-        book.setAuthors(result.getAuthors());
+        // Assuming only the first author is considered
+        book.setAuthors(result.getAuthors().subList(0, 1));
         book.setLanguages(result.getLanguages());
         book.setDownload_count(result.getDownloadCount());
         return book;
@@ -72,6 +74,20 @@ public class BookService {
     public List<Book> listBooksByLanguage(String language) {
         return bookCatalog.stream()
                 .filter(book -> book.getLanguages().contains(language))
+                .collect(Collectors.toList());
+    }
+
+    public List<Author> listAllAuthors() {
+        return bookCatalog.stream()
+                .flatMap(book -> book.getAuthors().stream())
+                .collect(Collectors.toList());
+    }
+
+    public List<Author> listLivingAuthors(int year) {
+        return bookCatalog.stream()
+                .flatMap(book -> book.getAuthors().stream())
+                .filter(author -> (author.getBirthYear() != null && author.getBirthYear() <= year) &&
+                        (author.getDeathYear() == null || author.getDeathYear() >= year))
                 .collect(Collectors.toList());
     }
 }

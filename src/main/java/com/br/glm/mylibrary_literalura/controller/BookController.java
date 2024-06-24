@@ -1,5 +1,6 @@
 package com.br.glm.mylibrary_literalura.controller;
 
+import com.br.glm.mylibrary_literalura.models.Author;
 import com.br.glm.mylibrary_literalura.models.Book;
 import com.br.glm.mylibrary_literalura.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,15 @@ public class BookController {
     @GetMapping("/language")
     public List<Book> listBooksByLanguage(@RequestParam String language) {
         return bookService.listBooksByLanguage(language);
+    }
+
+    @GetMapping("/authors")
+    public List<Author> listAllAuthors() {
+        return bookService.listAllAuthors();
+    }
+
+    @GetMapping("/authors/living")
+    public List<Author> listLivingAuthors(@RequestParam int year) {
+        return bookService.listLivingAuthors(year);
     }
 }
