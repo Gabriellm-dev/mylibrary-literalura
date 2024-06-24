@@ -1,5 +1,6 @@
 package com.br.glm.mylibrary_literalura;
 
+import com.br.glm.mylibrary_literalura.models.Book;
 import com.br.glm.mylibrary_literalura.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -7,7 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-
+import java.util.List;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -21,64 +22,45 @@ public class MylibraryLiteraluraApplication implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
-		exibirMenu();
-	}
-
-	private void exibirMenu() {
+	public void run(String... args) {
 		Scanner scanner = new Scanner(System.in);
-		boolean continuar = true;
-
-		while (continuar) {
-			System.out.println("Bem-vindo ao LiterAlura!");
-			System.out.println("Selecione uma opção:");
-			System.out.println("1. Buscar livros por título");
-			System.out.println("2. Buscar livros por autor");
-			System.out.println("3. Sair");
-			System.out.print("Opção: ");
-
+		while (true) {
+			System.out.print("Escolha uma opção: ");
+			System.out.println();
+			System.out.println("1. Buscar livro por título");
+			System.out.println("2. Listar todos os livros");
+			System.out.println("3. Listar livros por idioma");
+			System.out.println("0. Sair");
 			int opcao = scanner.nextInt();
 			scanner.nextLine();
 
 			switch (opcao) {
 				case 1:
-					buscarLivrosPeloTitulo(scanner);
+					System.out.print("Digite o título do livro: ");
+					System.out.println();
+					String title = scanner.nextLine();
+					Book book = bookService.getBook(title);
+					System.out.println("Livro encontrado: " + book);
 					break;
 				case 2:
-					buscarLivrosPeloAutor(scanner);
+					List<Book> allBooks = bookService.listAllBooks();
+					System.out.println("Todos os livros: ");
+					allBooks.forEach(System.out::println);
 					break;
 				case 3:
-					continuar = false;
+					System.out.print("Digite o idioma: ");
+					System.out.println();
+					String language = scanner.nextLine();
+					List<Book> booksByLanguage = bookService.listBooksByLanguage(language);
+					System.out.println("Livros no idioma " + language + ":");
+					booksByLanguage.forEach(System.out::println);
+					break;
+				case 0:
 					System.out.println("Saindo...");
-					break;
+					return;
 				default:
-					System.out.println("Opção inválida. Tente novamente.");
-					break;
+					System.out.println("Opção inválida.");
 			}
-		}
-
-		scanner.close();
-	}
-
-	private void buscarLivrosPeloTitulo(Scanner scanner) {
-		System.out.print("Digite o título do livro: ");
-		String titulo = scanner.nextLine();
-		try {
-			var response = bookService.getBooks(titulo);
-			bookService.printBooks(response.getResults());
-		} catch (Exception e) {
-			System.out.println("Erro ao buscar livros: " + e.getMessage());
-		}
-	}
-
-	private void buscarLivrosPeloAutor(Scanner scanner) {
-		System.out.print("Digite o nome do autor: ");
-		String autor = scanner.nextLine();
-		try {
-			var response = bookService.getBooks(autor);
-			bookService.printBooks(response.getResults());
-		} catch (Exception e) {
-			System.out.println("Erro ao buscar livros: " + e.getMessage());
 		}
 	}
 }
