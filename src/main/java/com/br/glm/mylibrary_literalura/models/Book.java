@@ -1,29 +1,51 @@
 package com.br.glm.mylibrary_literalura.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+
 
 import java.util.List;
+import java.util.OptionalDouble;
 
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "books")
 public class Book {
-    private int id;
+    @Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Getter
     private String title;
-    private List<Author> authors;
-    private List<String> languages;
-    private int download_count;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id")
+    private Author author;
+
+    private String language;
+    private Double download;
+
+    public Book() {
+    }
+
+    public Book(String title, Author author, List<String> languages, Double download) {
+        this.title = title;
+        this.author = author;
+        this.language = languages != null && !languages.isEmpty() ? String.join(",", languages) : null;
+        this.download = OptionalDouble.of(download).orElse(0);
+    }
 
     @Override
     public String toString() {
-        return  "\n  ID = " + id +
-                "\n  Titulo = " + title +
-                "\n  Autor = " + authors +
-                "\n  Idioma = " + languages +
-                "\n  Downloads = " + download_count +
-                "\n";
+        return "------ Book ------" + "\n" +
+                "Title: " + title + "\n" +
+                "Author: " + author.getName() + "\n" +
+                "Language: " + language + "\n" +
+                "Number of Downloads: " + download + "\n" +
+                "-------------------";
     }
 }

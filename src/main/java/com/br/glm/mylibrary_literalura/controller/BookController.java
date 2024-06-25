@@ -1,12 +1,10 @@
 package com.br.glm.mylibrary_literalura.controller;
 
-import com.br.glm.mylibrary_literalura.models.Author;
-import com.br.glm.mylibrary_literalura.models.Book;
+import com.br.glm.mylibrary_literalura.dto.BookDTO;
 import com.br.glm.mylibrary_literalura.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -16,30 +14,10 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    private BookService bookService;
+    private BookService service;
 
-    @GetMapping("/search")
-    public Book searchBook(@RequestParam String title) {
-        return bookService.getBook(title);
-    }
-
-    @GetMapping
-    public List<Book> listAllBooks() {
-        return bookService.listAllBooks();
-    }
-
-    @GetMapping("/language")
-    public List<Book> listBooksByLanguage(@RequestParam String language) {
-        return bookService.listBooksByLanguage(language);
-    }
-
-    @GetMapping("/authors")
-    public List<Author> listAllAuthors() {
-        return bookService.listAllAuthors();
-    }
-
-    @GetMapping("/authors/living")
-    public List<Author> listLivingAuthors(@RequestParam int year) {
-        return bookService.listLivingAuthors(year);
+    @GetMapping()
+    public List<BookDTO> getAllBooks(){
+        return service.getAllBooks();
     }
 }

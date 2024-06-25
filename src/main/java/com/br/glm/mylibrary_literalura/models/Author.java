@@ -1,24 +1,54 @@
 package com.br.glm.mylibrary_literalura.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "authors")
 public class Author {
-
+    @Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-    private Integer birthYear;
-    private Integer deathYear;
+    private int birthYear;
+    private int deathYear;
+
+    @Setter
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Book> books = new ArrayList<>();
+
+    public Author() {
+    }
+
+    public Author(String name, int birthYear, int deathYear) {
+        this.name = name;
+        this.birthYear = birthYear;
+        this.deathYear = deathYear;
+    }
+
+    public List<Book> getBooks() {
+        if (books == null) {
+            books = new ArrayList<>();
+        }
+        return books;
+    }
 
     @Override
     public String toString() {
-        return
-                name + '\'' +
-                birthYear +
-                deathYear;
+        return "Author: " + name + '\n' +
+                "Birth Year: " + birthYear + '\n' +
+                "Death Year: " + deathYear + '\n' +
+                "Books: " + books.stream()
+                .map(l -> l.getTitle())
+                .collect(Collectors.toList()) + '\n';
     }
 }
