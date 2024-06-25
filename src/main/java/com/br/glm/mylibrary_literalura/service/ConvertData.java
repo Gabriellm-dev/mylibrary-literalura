@@ -16,7 +16,7 @@ public class ConvertData implements IDataConverter {
             JsonNode rootNode = objectMapper.readTree(json);
             JsonNode resultsArray = rootNode.get("results");
 
-            if (resultsArray != null && resultsArray.size() > 0) {
+            if (resultsArray != null && !resultsArray.isEmpty()) {
                 JsonNode firstResult = resultsArray.get(0);
                 return objectMapper.treeToValue(firstResult, clazz);
             } else {
@@ -33,7 +33,7 @@ public class ConvertData implements IDataConverter {
             JsonNode rootNode = objectMapper.readTree(json);
             JsonNode resultsArray = rootNode.get("results");
 
-            if (resultsArray != null && resultsArray.size() > 0) {
+            if (resultsArray != null && !resultsArray.isEmpty()) {
                 List<T> resultList = new ArrayList<>();
                 for (JsonNode node : resultsArray) {
                     T result = objectMapper.treeToValue(node, clazz);

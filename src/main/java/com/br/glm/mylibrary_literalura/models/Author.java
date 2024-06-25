@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Getter
 @Setter
@@ -48,7 +48,7 @@ public class Author {
                 "Birth Year: " + birthYear + '\n' +
                 "Death Year: " + deathYear + '\n' +
                 "Books: " + books.stream()
-                .map(l -> l.getTitle())
-                .collect(Collectors.toList()) + '\n';
+                .map(Book::getTitle)
+                .toList() + '\n';
     }
 }

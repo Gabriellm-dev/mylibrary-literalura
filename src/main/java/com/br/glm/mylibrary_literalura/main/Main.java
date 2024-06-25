@@ -11,18 +11,18 @@ import com.br.glm.mylibrary_literalura.service.ConvertDataAuthor;
 import com.br.glm.mylibrary_literalura.service.ConvertData;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 public class Main {
-    private ApiService apiService = new ApiService();
-    private ConvertData converter = new ConvertData();
-    private ConvertDataAuthor authorConverter = new ConvertDataAuthor();
+    private final ApiService apiService = new ApiService();
+    private final ConvertData converter = new ConvertData();
+    private final ConvertDataAuthor authorConverter = new ConvertDataAuthor();
     private final String BASE_URL = "https://gutendex.com/books/";
 
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
-    private BookRepository bookRepository;
-    private AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
     private List<Book> books;
     private List<Author> authors;
     private Optional<Author> searchedAuthor;
@@ -31,6 +31,8 @@ public class Main {
         int choice = -1;
         while (choice != 0) {
             String menu = """
+                    ************************************************
+                    
                     Choose an option and enter the number:
                     1- Search Book by Title
                     2- List all registered books
@@ -39,6 +41,8 @@ public class Main {
                     5- List books by language
 
                     0 - Exit
+                    
+                    ************************************************
                     """;
             System.out.println(menu);
             choice = scanner.nextInt();
@@ -76,20 +80,17 @@ public class Main {
 
     private DadosBook fetchBookData(String bookName) {
         String json = apiService.fetchData(BASE_URL + "?search=" + bookName.replace(" ", "+"));
-        DadosBook bookData = converter.fetchData(json, DadosBook.class);
-        return bookData;
+        return converter.fetchData(json, DadosBook.class);
     }
 
     private DadosAuthor fetchAuthorData(String bookName) {
         String json = apiService.fetchData(BASE_URL + "?search=" + bookName.replace(" ", "+"));
-        DadosAuthor authorData = authorConverter.fetchData(json, DadosAuthor.class);
-        return authorData;
+        return authorConverter.fetchData(json, DadosAuthor.class);
     }
 
     private String askForBookTitle() {
         System.out.println("Enter the book title: ");
-        String bookTitle = scanner.nextLine();
-        return bookTitle;
+        return scanner.nextLine();
     }
 
     private void displayAllBooks() {
@@ -128,7 +129,6 @@ public class Main {
                     DadosAuthor authorData = fetchAuthorData(bookTitle);
                     if (authorData != null) {
                         List<Author> authors = authorRepository.findAll();
-                        authors = authors != null ? authors : new ArrayList<>();
 
                         Optional<Author> existingAuthor = authors.stream()
                                 .filter(a -> authorData.name() != null &&
@@ -167,18 +167,18 @@ public class Main {
 
     public void displayAllAuthors() {
         authors = authorRepository.findAll();
-        authors.stream()
+        authors
                 .forEach(System.out::println);
     }
 
     public void displayAuthorsAliveInSpecificYear() {
-        System.out.println("Enter a year:");
+        System.out.println("Enter a year: ");
         int year = scanner.nextInt();
         authors = authorRepository.findAll();
         List<String> aliveAuthorsNames = authors.stream()
                 .filter(a -> (a.getDeathYear() >= year) && (a.getBirthYear() <= year))
-                .map(a -> a.getName())
-                .collect(Collectors.toList());
+                .map(Author::getName)
+                .toList();
         aliveAuthorsNames.forEach(System.out::println);
     }
 
@@ -187,7 +187,7 @@ public class Main {
         List<String> uniqueLanguages = books.stream()
                 .map(Book::getLanguage)
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
         uniqueLanguages.forEach(language -> {
             switch (language) {
                 case "pt":
@@ -201,12 +201,12 @@ public class Main {
                     break;
             }
         });
-        System.out.println("");
-        System.out.println("Enter the language you want to search books for:");
+        System.out.println();
+        System.out.println("Enter the language you want to search books for: ");
         String languageToSearch = scanner.nextLine();
         List<Book> searchedBooks = books.stream()
                 .filter(b -> b.getLanguage().contains(languageToSearch))
-                .collect(Collectors.toList());
+                .toList();
         searchedBooks.forEach(System.out::println);
 
     }

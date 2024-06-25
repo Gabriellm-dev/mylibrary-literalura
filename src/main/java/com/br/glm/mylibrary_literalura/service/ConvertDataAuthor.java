@@ -17,7 +17,7 @@ public class ConvertDataAuthor implements IDataConverter {
 
             JsonNode resultsArray = rootNode.get("results");
 
-            if (resultsArray != null && resultsArray.size() > 0) {
+            if (resultsArray != null && !resultsArray.isEmpty()) {
                 JsonNode firstResult = resultsArray.get(0).get("authors").get(0);
 
                 return objectMapper.treeToValue(firstResult, clazz);
@@ -35,7 +35,7 @@ public class ConvertDataAuthor implements IDataConverter {
             JsonNode rootNode = objectMapper.readTree(json);
 
             JsonNode resultsArray = rootNode.get("results");
-            if (resultsArray != null && resultsArray.size() > 0) {
+            if (resultsArray != null && !resultsArray.isEmpty()) {
                 List<T> resultList = new ArrayList<>();
                 for (int i = 0; i < resultsArray.size(); i++) {
                     JsonNode firstResult = resultsArray.get(i).get("authors").get(0);
